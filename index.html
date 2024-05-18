@@ -5,28 +5,490 @@
     <title>Tailwind boilerplate</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css" type="text/css" async>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
     <!-- Alpine Plugins -->
     <script defer src="https://unpkg.com/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
     <!-- Alpine Core -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
+<style>
+  [x-cloak] {
+    display: none !important;
+  }
+  body {
+    font-family: "Roboto";
+  }
+  .slide-enter-active, .slide-leave-active {
+      transition: transform 0.5s ease-in-out;
+  }
+  .slide-enter, .slide-leave-to {
+      transform: translate-x(-100%);
+  }
+</style>
+
+<script>
+  function tabHandler() {
+    return {
+      tab: window.location.hash ? window.location.hash.substring(1) : "home",
+      getTabClasses(currentTab) {
+        if (this.tab === currentTab) {
+          return "text-stone-50 bg-green-600";
+        } else {
+          return "text-stone-900 hover:text-green-700";
+        }
+      },
+    };
+  }
+  function carousel() {
+      return {
+          activeIndex: 0,
+          images: [
+              'https://via.placeholder.com/600x400.png?text=1',
+              'https://via.placeholder.com/600x400.png?text=2',
+              'https://via.placeholder.com/600x400.png?text=3'
+          ],
+          init() {
+              this.autoRotate();
+          },
+          autoRotate() {
+              setInterval(() => {
+                  this.next();
+              }, 3000); // Rotate every 3 seconds
+          },
+          next() {
+              this.activeIndex++;
+              if (this.activeIndex === this.images.length) this.activeIndex = 0;
+          },
+          prev() {
+              this.activeIndex--;
+              if (this.activeIndex < 0) this.activeIndex = this.images.length - 1;
+          }
+      }
+  }
+</script>
+
 <body
-  class="bg-gray-50"
+  x-data="tabHandler()"
+  class="bg-stone-100"
 >
-  <div
-    class="container mx-auto"
-  >
+  <div class="max-w-4xl mx-auto">
+
+    <!-- This is navigation header -->
     <div
-      class="flex flex-col items-center justify-center h-screen"
     >
-      <h1
-        class="text-4xl font-bold text-red-500"
+      <div
+        class="flex items-center py-6 space-x-1 px-2"
       >
-        Hello toto World
-      </h1>
+
+        <img @click.prevent="tab = 'home'; window.location.hash = 'home'" class="w-[70px] h-[38px] xl:w-[150px] xl:h-[71px] " src="https://v-images.cdnsw.com/Root/durlh/logoflcub2.png?s=YqFAknhl" alt="">
+        <a
+          href="#"
+          :class="getTabClasses('activites')"
+          class="text-sm xl:text-xl flex items-center justify-center px-1 py-1 font-medium transition duration-300 ease-out rounded md:px-2 xl:px-4"
+          @click.prevent="tab = 'activites'; window.location.hash = 'activites'"
+        >
+          Activités
+        </a>
+        <a
+          href="#"
+          :class="getTabClasses('horaires')"
+          class="text-sm xl:text-xl flex items-center justify-center px-1 py-1 font-medium transition duration-300 ease-out rounded md:px-2 xl:px-4"
+          @click.prevent="tab = 'horaires'; window.location.hash = 'horaires'"
+          >
+          Horaires & planning
+        </a>
+        <a
+          href="#"
+          :class="getTabClasses('inscription')"
+          class="text-sm xl:text-xl flex items-center justify-center px-1 py-1 font-medium transition duration-300 ease-out rounded md:px-2 xl:px-4"
+          @click.prevent="tab = 'inscription'; window.location.hash = 'inscription'"
+        >
+          Inscription
+        </a>
+        <a
+          href="#"
+          :class="getTabClasses('tarif')"
+          class="text-sm xl:text-xl flex items-center justify-center px-1 py-1 font-medium transition duration-300 ease-out rounded md:px-2 xl:px-4"
+          @click.prevent="tab = 'tarif'; window.location.hash = 'tarif'"
+        >
+          Tarif
+        </a>
+      </div>
+    </div>
+
+
+    <!-- This is homepage -->
+    <div
+      x-cloak
+      x-show="tab === 'home'"
+      class="mx-auto"
+    >
+      <div x-data="carousel()" class="flex justify-center items-center w-full">
+          <div class="relative w-full h-[493px] overflow-hidden">
+              <div class="flex h-full transition-transform duration-500 ease-in-out" :style="'width: ' + images.length * 100 + '%; transform: translateX(-' + activeIndex * 100 / images.length + '%)'">
+                  <template x-for="image in images" :key="image">
+                      <div class="w-full h-full bg-cover bg-center" :style="'background-image: url(' + image + ');'"></div>
+                  </template>
+              </div>
+              <button class="absolute left-0 z-10 inset-y-0 my-auto flex items-center justify-center bg-black bg-opacity-25 text-white w-12 h-12"
+                      @click="prev()">
+                  &#8592;
+              </button>
+              <button class="absolute right-0 z-10 inset-y-0 my-auto flex items-center justify-center bg-black bg-opacity-25 text-white w-12 h-12"
+                      @click="next()">
+                  &#8594;
+              </button>
+          </div>
+      </div>
+      <div class="pt-12 px-4">
+        <div>
+          <h2 class="text-3xl font-bold text-green-600">
+            Le F-CLUB
+          </h2>
+          <div class="pt-2">
+            <span class="text-stone-800 font-semibold italic text-xl">
+              Un lieu vivant où nous espérons que vous prendrez beaucoup de plaisir à venir vous entrainer.
+            </span>
+          </div>
+          <div class="pt-6 text-stone-700 text-xl">
+          <span>
+            En 2015, une idée germe petit à petit dans la tête d’une <strong>équipe de passionnés</strong> : ouvrir une salle de sports de combat et de remise en forme sur Saint-Etienne. Mais bien plus qu’une simple salle de sport telle qu’il en existe tant d’autres. L’idée est de créer un lieu de vie accessible au plus grand nombre, un lieu où le <strong>vivre ensemble et la mixité</strong> ne sont pas que des slogans creux, un lieu où le sport rassemble : le F-Club.
+          </span>
+          </div>
+          <div class="pt-4 text-stone-700 text-xl">
+              <span>
+                Découvrez notre association dédiée aux <strong>arts martiaux et au fitness</strong>.
+                Vous pourrez apprendre le Krav maga, le MMA, la Luta Livre, le Full contact, ou pratiquer le CrossFit, le Pilates, et la remise en forme.
+                Que vous soyez <strong>débutant ou compétiteur, adulte ou enfant</strong>, <button @click.prevent="tab = 'inscription'; window.location.hash = 'inscription'" class="text-green-600 font-medium transition duration-300 ease-out rounded hover:text-green-500">rejoignez-nous</button>, notre club est ouvert à tous et s’adapte à chaque objectif.
+              </span>
+          </div>
+        </div>
+        <div>
+          <!-- <h3>Actu du club</h3> -->
+        </div>
+        <div class="pt-12">
+          <h3 class="text-3xl font-bold text-green-600">
+            Présentation de l'équipe
+          </h3>
+          <div class="pt-8 xl:flex xl:space-x-16 xl:items-center">
+            <div class="xl:w-1/2">
+              <img class="" src="https://v-images.cdnsw.com/Root/ct9rc/Fightness_Club_img_3704.jpg?s=YqFFkXU=&webp_compatible=1" alt="">
+              <div class="pt-2">
+                <span class="font-bold text-stone-800 text-2xl">
+                  Luc Hernandez
+                </span>
+              </div>
+              <div>
+                <span class="text-xl font-medium text-stone-700">
+                  Disciplines : Luta Livre, MMA
+                </span>
+              </div>
+            </div>
+            <div class="pt-4 xl:w-1/2">
+              <span class="text-stone-700 text-xl">
+                Passionné d'arts martiaux depuis sa tendre enfance, devenu pédagogue hors pair, Luc a un don pour vous faire aimer le combat au sol et le MMA.
+                Son CV sportif parle pour lui: <br><br>
+                Ceinture noir de Luta Livre <br>
+                1er Dan de Luta Livre <br>
+                Ceinture noire 2ème Dan Judo <br>
+                Gant noire de Kick Boxing <br>
+                BMF2 FFKMDA <br>
+                BPJEPS sport de combat <br>
+                BF2 MMA <br>
+                Mitaine noire CNMMA <br>
+                Palmarès pro Mma: http://www.sherdog.com/fighter/Luc-Hernandez-72905 <br>
+                Médaillé tournoi international Marseille jujitsu combat <br>
+                Brevet d'état Judo-jujitsu
+              </span>
+            </div>
+          </div>
+
+          <div class="pt-8 xl:flex xl:space-x-16 xl:items-center">
+            <div class="xl:w-1/2">
+              <img class="" src="https://v-images.cdnsw.com/Root/ct9ra/Fightness_Club_img_3730.jpg?s=YqFFkXU=&webp_compatible=1" alt="">
+              <div class="pt-2">
+                <span class="font-bold text-stone-800 text-2xl">
+                  Nori Berramdane
+                </span>
+              </div>
+              <div>
+                <span class="text-xl font-medium text-stone-700">
+                  Discipline : Boxe Pied Poing
+                </span>
+              </div>
+            </div>
+            <div class="pt-4 xl:w-1/2">
+              <span class="text-stone-700 text-xl">
+                L'équipe du Fclub est heureuse de compter Nori parmi le staff enseignant !
+                Initié très tôt à la pratique martiale, il obtiendra une ceinture marron en full contact et plusieurs titres de champion de la Loire.
+                Amoureux de sports de combat, c'est tout naturellement que Nori s'oriente vers le MMA et la Luta Livre où il obtient le grade de ceinture jaune.
+                Les petit plus ? Nori est un enseignant efficace qui n'a pas oublié d'être drôle. <br><br>
+                - Ceinture marron de Full Contact <br>
+
+                - Titulaire d'un BMF2 FFKMDA <br>
+
+                - Pratiquant de Luta Livre et de judo <br>
+
+                - Gant noir de Kick-Boxing
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- This is activites page -->
+    <div
+      x-cloak
+      x-show="tab === 'activites'"
+      class=""
+    >
+      <div class="pt-16 pb-4 border-b border-stone-200">
+        <h2 class="text-3xl font-bold text-green-600">
+          Les sports de combat
+        </h2>
+      </div>
+      <div>
+        <svg width="119" height="119" viewBox="0 0 119 119" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="svg_gradient_524766" x1="1" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="rgb(53, 126, 77)"></stop><stop offset="100%" stop-color="rgb(53, 126, 77)"></stop></linearGradient></defs><g transform="rotate(47.195575430989265,59.5,59.5)"><path stroke="black" stroke-width="0" fill="url(#svg_gradient_524766)" d="M59.5,21.01589573865219C75.5786362239021,21.373841124011197,88.35629037189335,33.21403889817532,93.41457049441007,48.48048805708679C98.57624810012605,64.05900226225661,96.33876836218407,82.2857429769518,82.94120763394793,91.76405438137677C69.94547848872861,100.95808382185143,53.021974881279945,95.49927221546628,40.10464078205541,86.19542176862285C26.974731140959605,76.73846147457452,15.981213275936387,62.36843594119746,20.596212407176758,46.85939315303037C25.505245031917866,30.36222926187369,42.2922033596473,20.632812788466776,59.5,21.01589573865219" style="fill: url(&quot;#svg_gradient_524766&quot;);"></path></g></svg>
+      </div>
+      <div class="pt-8 pb-4 border-b border-stone-200">
+        <h3 class="text-3xl font-bold text-green-600">
+          Krav-maga
+        </h3>
+      </div>
+      <div class="pt-6">
+        <p class="text-xl text-stone-700">
+          Le krav-Maga se compose en deux parties : <br><br>
+- La self-défense. Elle renferme des techniques variées visant à permettre aux initiés de se défendre contre une attaque, éviter les blessures et permet de venir à bout d’un assaillant. Cette partie contient des parades contre une grande diversité d’attaques armées ou non et dans des positions de base différentes : debout, assis, couché...
+<br>
+- Le combat au corps à corps, qui constitue une phase plus avancée du Krav-Maga. Il regroupe des éléments ayant trait au combat proprement dit : les tactiques, les feintes, la combinaison d’attaques différentes, la dimension psychologique du combat... et autant d’exercices permettant de renforcer son esprit et de développer une capacité à gérer des confrontations violentes dans un état de stress.
+        </p>
+      </div>
+      <div class="pt-8 pb-4 border-b border-stone-200">
+        <h3 class="text-3xl font-bold text-green-600">
+          Tolpar (escrime lame courte)
+        </h3>
+      </div>
+      <div class="pt-6">
+        <p class="text-xl text-stone-700">
+          Le combat au couteau est un sport de combat moderne qui puise son origine dans les duels ancestraux à l’arme blanche. <br><br>
+
+Le système enseigné au F-club s’appuie sur le travail de l’école russe TOLPAR. <br> <br>
+
+L’élève peut en toute sécurité apprendre le maniement du couteau et s’affronter avec différents partenaires. <br><br>
+
+Le combat au couteau revêt un aspect ludique adapté à tous les physiques.
+        </p>
+      </div>
+      <div class="pt-8 pb-4 border-b border-stone-200">
+        <h3 class="text-3xl font-bold text-green-600">
+          MMA
+        </h3>
+      </div>
+      <div class="pt-6">
+        <p class="text-xl text-stone-700">
+          Le mixed martial arts (MMA), littéralement « arts martiaux mixtes », est une discipline de combat aussi appelée en français « Free fight», un sport de combat complet associant pugilat et lutte au corps à corps dans lequel les deux combattants peuvent utiliser de nombreuses techniques.
+
+ <br><br>
+
+Selon les fédérations, sont autorisées des techniques de percussion telles que coups de pied, de poing, de genou et de coude, des techniques de projections et de soumission (Luta Livre) et parfois certaines techniques de percussion au sol.
+
+<br><br>
+Le combat libre existe en réalité depuis fort longtemps et on en retrouve des traces dans de nombreux arts anciens.
+        </p>
+      </div>
+      <div class="pt-8 pb-4 border-b border-stone-200">
+        <h3 class="text-3xl font-bold text-green-600">
+          Luta-Livre
+        </h3>
+      </div>
+      <div class="pt-6">
+        <p class="text-xl text-stone-700">
+          La Luta Livre est un style de lutte venant du Brésil. Elle consiste à amener son adversaire au sol pour le faire abandonner grâce à des finalisations comme des clés de bras , clés d’épaules , étranglements, clés de chevilles, compressions musculaires, et bien d’autres.
+
+ <br><br>
+
+C’est un sport indispensable pour se perfectionner au sol pour les pratiquants de MMA et de Krav Maga.
+
+ <br><br>
+
+C’est aussi un sport extrêmement ludique pour commencer les sports de combats car les frappes sont absentes. Les enfants et les adolescents en raffolent également !
+
+ <br><br>
+
+Ce sport se pratique en rashguard / short ou pantalon.
+        </p>
+      </div>
+      <div class="pt-8 pb-4 border-b border-stone-200">
+        <h3 class="text-3xl font-bold text-green-600">
+          Boxe pied-poing
+        </h3>
+      </div>
+      <div class="pt-6">
+        <p class="text-xl text-stone-700">
+Le Full Contact, la boxe thai, la boxe française et le kick boxing sont autant de boxes dites de pied poing.
+<br><br>
+
+
+Alliance parfaite du physique et du mental, elle demande agilité, très grande maîtrise de soi, intelligence, courage et une parfaite condition physique.
+
+ <br><br>
+
+Au F-Club, nous proposons d’acquérir les bases indispensables de la boxe pied poing que ce soit pour la compétition ou pour un complément en MMA ou en self défense.
+        </p>
+      </div>
+    </div>
+
+    <!-- This is activites enfant page -->
+    <div
+      x-cloak
+      x-show="tab === 'activites-enfant'"
+      class=""
+    >
+      activites enfant
+    </div>
+
+    <!-- This is inscription page -->
+    <div
+      x-cloak
+      x-show="tab === 'inscription'"
+      class=""
+    >
+      inscription
+    </div>
+
+      <!-- This is horaires et planning page -->
+    <div
+      x-cloak
+      x-show="tab === 'horaires'"
+      class=""
+    >
+      Horaires et planning
+    </div>
+
+      <!-- This is inscription page -->
+    <div
+      x-cloak
+      x-show="tab === 'tarif'"
+      class=""
+    >
+      Tarif
     </div>
   </div>
+
+  <footer class="pt-20 ">
+    <div class="py-12  bg-stone-200">
+      <div class="xl:flex xl:space-x-20 xl:max-w-4xl xl:mx-auto">
+
+        <div class="mx-auto w-80  xl:w-auto space-y-4">
+          <img class="w-[66px] h-[34px] xl:w-[124px] xl:h-[70px]" src="https://v-images.cdnsw.com/Root/durlh/logoflcub2.png?s=YqFAknhl" alt="">
+          <div class="text-stone-800 ">
+            <div class=>
+              <span class="text-2xl font-bold">
+                Permanence accueil
+              </span>
+            </div>
+            <div class="flex justify-between space-x-12 pt-4  items-center text-medium text-xl">
+              <span>
+                Lundi
+              </span>
+              <span>
+                17h -
+              </span>
+            </div>
+            <div  class="flex justify-between space-x-12  items-center text-medium text-xl">
+              <span>
+                Mardi
+              </span>
+              <span>
+                FERME
+              </span>
+            </div>
+            <div  class="flex justify-between space-x-12  items-center text-medium text-xl">
+              <span>
+                Mercredi
+              </span>
+              <span>
+                13h30 - 20h
+              </span>
+            </div>
+            <div  class="flex justify-between space-x-12  items-center text-medium text-xl">
+              <span>
+                Jeudi
+              </span>
+              <span>
+                FERME
+              </span>
+            </div>
+            <div  class="flex justify-between space-x-12  items-center text-medium text-xl">
+              <span>
+                Vendredi
+              </span>
+              <span>
+                17h - 19h
+              </span>
+            </div>
+            <div  class="flex justify-between space-x-12  items-center text-medium text-xl">
+              <span>
+                Samedi/Dimanche
+              </span>
+              <span>
+                FERME
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="pt-12 w-80 xl:max-w-4xl xl:w-auto mx-auto space-y-2">
+          <div class="flex items-center space-x-4">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+            </svg>
+            <span class="text-xl">
+              fclub.contact@gmail.com
+            </span>
+          </div>
+          <div class="flex items-center space-x-4">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75v-4.5m0 4.5h4.5m-4.5 0 6-6m-3 18c-8.284 0-15-6.716-15-15V4.5A2.25 2.25 0 0 1 4.5 2.25h1.372c.516 0 .966.351 1.091.852l1.106 4.423c.11.44-.054.902-.417 1.173l-1.293.97a1.062 1.062 0 0 0-.38 1.21 12.035 12.035 0 0 0 7.143 7.143c.441.162.928-.004 1.21-.38l.97-1.293a1.125 1.125 0 0 1 1.173-.417l4.423 1.106c.5.125.852.575.852 1.091V19.5a2.25 2.25 0 0 1-2.25 2.25h-2.25Z" />
+            </svg>
+            <span class="text-xl">
+              07 68 70 25 56
+            </span>
+          </div>
+        </div>
+        <div class="pt-12 w-80 xl:max-w-4xl xl:w-auto  mx-auto">
+          <div>
+            <span class="text-xl">
+              <strong>Adresse:</strong> <br>
+              27 B, rue de Terrenoire
+              42000 Saint Etienne
+            </span>
+          </div>
+          <div class="pt-8 flex items-center space-x-4">
+            <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyD4BLKPQpWXTsw5FtLjfpU1xRpQQAOmNwk&&zoom=14&maptype=roadmap&q=27B%20rue%20de%20Terrenoire%2042000%20Saint%20Etienne" frameborder="0"></iframe>
+          </div>
+        </div>
+        <div class="pt-12 w-80 xl:max-w-4xl xl:w-auto mx-auto">
+          <div class="flex items-center space-x-4">
+            <a href="https://www.facebook.com/fclubste">
+              <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="40" height="40" viewBox="0 0 50 50">
+                <path d="M25,3C12.85,3,3,12.85,3,25c0,11.03,8.125,20.137,18.712,21.728V30.831h-5.443v-5.783h5.443v-3.848 c0-6.371,3.104-9.168,8.399-9.168c2.536,0,3.877,0.188,4.512,0.274v5.048h-3.612c-2.248,0-3.033,2.131-3.033,4.533v3.161h6.588 l-0.894,5.783h-5.694v15.944C38.716,45.318,47,36.137,47,25C47,12.85,37.15,3,25,3z"></path>
+              </svg>
+            </a>
+            <a href="https://www.instagram.com/fclub42/">
+              <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="40" height="40" viewBox="0 0 50 50">
+                  <path d="M 16 3 C 8.83 3 3 8.83 3 16 L 3 34 C 3 41.17 8.83 47 16 47 L 34 47 C 41.17 47 47 41.17 47 34 L 47 16 C 47 8.83 41.17 3 34 3 L 16 3 z M 37 11 C 38.1 11 39 11.9 39 13 C 39 14.1 38.1 15 37 15 C 35.9 15 35 14.1 35 13 C 35 11.9 35.9 11 37 11 z M 25 14 C 31.07 14 36 18.93 36 25 C 36 31.07 31.07 36 25 36 C 18.93 36 14 31.07 14 25 C 14 18.93 18.93 14 25 14 z M 25 16 C 20.04 16 16 20.04 16 25 C 16 29.96 20.04 34 25 34 C 29.96 34 34 29.96 34 25 C 34 20.04 29.96 16 25 16 z"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
 </body>
 
 
