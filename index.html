@@ -33,12 +33,20 @@
   function tabHandler() {
     return {
       tab: window.location.hash ? window.location.hash.substring(1) : "home",
+      isModalOpen: false,
+      modalImage: '',
       getTabClasses(currentTab) {
-        if (this.tab === currentTab) {
-          return "text-stone-50 bg-green-600";
-        } else {
-          return "text-stone-900 hover:text-green-700";
-        }
+        return this.tab === currentTab
+          ? "text-stone-50 bg-green-600"
+          : "text-stone-900 hover:text-green-700";
+      },
+      openModal(imageSrc) {
+        this.modalImage = imageSrc;
+        this.isModalOpen = true;
+      },
+      closeModal() {
+        this.isModalOpen = false;
+        this.modalImage = '';
       },
     };
   }
@@ -46,10 +54,12 @@
       return {
           activeIndex: 0,
           images: [
-              'https://via.placeholder.com/600x400.png?text=1',
-              'https://via.placeholder.com/600x400.png?text=2',
-              'https://via.placeholder.com/600x400.png?text=3'
-          ],
+            'assets/room_bg_1.jpg',
+            'assets/room_bg_2.jpg',
+            'assets/room_bg_3.jpg',
+            'assets/room_bg_4.jpg'
+
+        ],
           init() {
               this.autoRotate();
           },
@@ -70,24 +80,24 @@
   }
 </script>
 
-<body
+<div
   x-data="tabHandler()"
   class="bg-stone-100"
 >
-  <div class="max-w-4xl mx-auto">
+  <div class="mx-auto max-w-7xl">
 
     <!-- This is navigation header -->
     <div
     >
       <div
-        class="flex items-center py-6 space-x-1 px-2"
+        class="flex items-center px-2 py-6 space-x-4 xl:space-x-8"
       >
 
-        <img @click.prevent="tab = 'home'; window.location.hash = 'home'" class="w-[70px] h-[38px] xl:w-[150px] xl:h-[71px] " src="https://v-images.cdnsw.com/Root/durlh/logoflcub2.png?s=YqFAknhl" alt="">
+        <img @click.prevent="tab = 'home'; window.location.hash = 'home'" class="w-[70px] h-[38px] xl:w-[150px] xl:h-[71px] cursor-pointer" src="assets/logo.png" alt="">
         <a
           href="#"
           :class="getTabClasses('activites')"
-          class="text-sm xl:text-xl flex items-center justify-center px-1 py-1 font-medium transition duration-300 ease-out rounded md:px-2 xl:px-4"
+          class="flex items-center justify-center px-1 py-1 text-sm font-medium transition duration-300 ease-out rounded xl:text-xl md:px-2 xl:px-4"
           @click.prevent="tab = 'activites'; window.location.hash = 'activites'"
         >
           Activités
@@ -95,7 +105,7 @@
         <a
           href="#"
           :class="getTabClasses('horaires')"
-          class="text-sm xl:text-xl flex items-center justify-center px-1 py-1 font-medium transition duration-300 ease-out rounded md:px-2 xl:px-4"
+          class="flex items-center justify-center px-1 py-1 text-sm font-medium transition duration-300 ease-out rounded xl:text-xl md:px-2 xl:px-4"
           @click.prevent="tab = 'horaires'; window.location.hash = 'horaires'"
           >
           Horaires & planning
@@ -103,7 +113,7 @@
         <a
           href="#"
           :class="getTabClasses('inscription')"
-          class="text-sm xl:text-xl flex items-center justify-center px-1 py-1 font-medium transition duration-300 ease-out rounded md:px-2 xl:px-4"
+          class="flex items-center justify-center px-1 py-1 text-sm font-medium transition duration-300 ease-out rounded xl:text-xl md:px-2 xl:px-4"
           @click.prevent="tab = 'inscription'; window.location.hash = 'inscription'"
         >
           Inscription
@@ -111,7 +121,7 @@
         <a
           href="#"
           :class="getTabClasses('tarif')"
-          class="text-sm xl:text-xl flex items-center justify-center px-1 py-1 font-medium transition duration-300 ease-out rounded md:px-2 xl:px-4"
+          class="flex items-center justify-center px-1 py-1 text-sm font-medium transition duration-300 ease-out rounded xl:text-xl md:px-2 xl:px-4"
           @click.prevent="tab = 'tarif'; window.location.hash = 'tarif'"
         >
           Tarif
@@ -126,43 +136,43 @@
       x-show="tab === 'home'"
       class="mx-auto"
     >
-      <div x-data="carousel()" class="flex justify-center items-center w-full">
-          <div class="relative w-full h-[493px] overflow-hidden">
+      <div x-data="carousel()" class="flex items-center justify-center w-full pt-2">
+          <div class="relative w-full h-[493px] overflow-hidden xl:h-[800px] rounded-3xl shadow-xl">
               <div class="flex h-full transition-transform duration-500 ease-in-out" :style="'width: ' + images.length * 100 + '%; transform: translateX(-' + activeIndex * 100 / images.length + '%)'">
                   <template x-for="image in images" :key="image">
-                      <div class="w-full h-full bg-cover bg-center" :style="'background-image: url(' + image + ');'"></div>
+                      <div class="w-full h-full bg-center bg-cover" :style="'background-image: url(' + image + ');'"></div>
                   </template>
               </div>
-              <button class="absolute left-0 z-10 inset-y-0 my-auto flex items-center justify-center bg-black bg-opacity-25 text-white w-12 h-12"
+              <!-- <button class="absolute inset-y-0 left-0 z-10 flex items-center justify-center w-12 h-12 my-auto text-white bg-black bg-opacity-25"
                       @click="prev()">
                   &#8592;
               </button>
-              <button class="absolute right-0 z-10 inset-y-0 my-auto flex items-center justify-center bg-black bg-opacity-25 text-white w-12 h-12"
+              <button class="absolute inset-y-0 right-0 z-10 flex items-center justify-center w-12 h-12 my-auto text-white bg-black bg-opacity-25"
                       @click="next()">
                   &#8594;
-              </button>
+              </button> -->
           </div>
       </div>
-      <div class="pt-12 px-4">
+      <div class="px-4 pt-20">
         <div>
           <h2 class="text-3xl font-bold text-green-600">
             Le F-CLUB
           </h2>
           <div class="pt-2">
-            <span class="text-stone-800 font-semibold italic text-xl">
+            <span class="text-xl italic font-semibold text-stone-800">
               Un lieu vivant où nous espérons que vous prendrez beaucoup de plaisir à venir vous entrainer.
             </span>
           </div>
-          <div class="pt-6 text-stone-700 text-xl">
+          <div class="pt-6 text-xl text-stone-700">
           <span>
             En 2015, une idée germe petit à petit dans la tête d’une <strong>équipe de passionnés</strong> : ouvrir une salle de sports de combat et de remise en forme sur Saint-Etienne. Mais bien plus qu’une simple salle de sport telle qu’il en existe tant d’autres. L’idée est de créer un lieu de vie accessible au plus grand nombre, un lieu où le <strong>vivre ensemble et la mixité</strong> ne sont pas que des slogans creux, un lieu où le sport rassemble : le F-Club.
           </span>
           </div>
-          <div class="pt-4 text-stone-700 text-xl">
+          <div class="pt-4 text-xl text-stone-700">
               <span>
                 Découvrez notre association dédiée aux <strong>arts martiaux et au fitness</strong>.
                 Vous pourrez apprendre le Krav maga, le MMA, la Luta Livre, le Full contact, ou pratiquer le CrossFit, le Pilates, et la remise en forme.
-                Que vous soyez <strong>débutant ou compétiteur, adulte ou enfant</strong>, <button @click.prevent="tab = 'inscription'; window.location.hash = 'inscription'" class="text-green-600 font-medium transition duration-300 ease-out rounded hover:text-green-500">rejoignez-nous</button>, notre club est ouvert à tous et s’adapte à chaque objectif.
+                Que vous soyez <strong>débutant ou compétiteur, adulte ou enfant</strong>, <button @click.prevent="tab = 'inscription'; window.location.hash = 'inscription'" class="font-medium text-green-600 transition duration-300 ease-out rounded hover:text-green-500">rejoignez-nous</button>, notre club est ouvert à tous et s’adapte à chaque objectif.
               </span>
           </div>
         </div>
@@ -177,7 +187,7 @@
             <div class="xl:w-1/2">
               <img class="" src="https://v-images.cdnsw.com/Root/ct9rc/Fightness_Club_img_3704.jpg?s=YqFFkXU=&webp_compatible=1" alt="">
               <div class="pt-2">
-                <span class="font-bold text-stone-800 text-2xl">
+                <span class="text-2xl font-bold text-stone-800">
                   Luc Hernandez
                 </span>
               </div>
@@ -188,7 +198,7 @@
               </div>
             </div>
             <div class="pt-4 xl:w-1/2">
-              <span class="text-stone-700 text-xl">
+              <span class="text-xl text-stone-700">
                 Passionné d'arts martiaux depuis sa tendre enfance, devenu pédagogue hors pair, Luc a un don pour vous faire aimer le combat au sol et le MMA.
                 Son CV sportif parle pour lui: <br><br>
                 Ceinture noir de Luta Livre <br>
@@ -210,7 +220,7 @@
             <div class="xl:w-1/2">
               <img class="" src="https://v-images.cdnsw.com/Root/ct9ra/Fightness_Club_img_3730.jpg?s=YqFFkXU=&webp_compatible=1" alt="">
               <div class="pt-2">
-                <span class="font-bold text-stone-800 text-2xl">
+                <span class="text-2xl font-bold text-stone-800">
                   Nori Berramdane
                 </span>
               </div>
@@ -221,7 +231,7 @@
               </div>
             </div>
             <div class="pt-4 xl:w-1/2">
-              <span class="text-stone-700 text-xl">
+              <span class="text-xl text-stone-700">
                 L'équipe du Fclub est heureuse de compter Nori parmi le staff enseignant !
                 Initié très tôt à la pratique martiale, il obtiendra une ceinture marron en full contact et plusieurs titres de champion de la Loire.
                 Amoureux de sports de combat, c'est tout naturellement que Nori s'oriente vers le MMA et la Luta Livre où il obtient le grade de ceinture jaune.
@@ -245,7 +255,6 @@
     <div
       x-cloak
       x-show="tab === 'activites'"
-      class=""
     >
       <div class="pt-16 pb-4 border-b border-stone-200">
         <h2 class="text-3xl font-bold text-green-600">
@@ -344,33 +353,126 @@ Au F-Club, nous proposons d’acquérir les bases indispensables de la boxe pied
     </div>
 
     <!-- This is activites enfant page -->
-    <div
+    <!-- <div
       x-cloak
       x-show="tab === 'activites-enfant'"
       class=""
     >
       activites enfant
-    </div>
+    </div> -->
 
     <!-- This is inscription page -->
+
+
+
     <div
       x-cloak
       x-show="tab === 'inscription'"
       class=""
     >
-      inscription
+      <div class="pt-16 pb-4 border-b border-stone-200">
+        <h2 class="text-3xl font-bold text-green-600">Inscription en ligne via Hello asso</h2>
+      </div>
+      <div class="pt-8 space-y-4">
+        <div>
+          <a href="" target="_blank" class="text-lg text-blue-700 underline">Inscription sports de combat adulte</a>
+        </div>
+        <div>
+          <a href="" target="_blank" class="text-lg text-blue-700 underline">Inscription sports de combat féminin</a>
+        </div>
+        <div>
+          <a href="" target="_blank" class="text-lg text-blue-700 underline">Inscription sports de combat enfants</a>
+        </div>
+        <div>
+          <a href="" target="_blank" class="text-lg text-blue-700 underline">Inscription sports de combat ados</a>
+        </div>
+        <div>
+          <a href="" target="_blank" class="text-lg text-blue-700 underline">Inscription sports de combat adulte</a>
+        </div>
+        <div>
+          <a href="" target="_blank" class="text-lg text-blue-700 underline">Inscription sports de combat adulte</a>
+        </div>
+      </div>
     </div>
 
       <!-- This is horaires et planning page -->
-    <div
-      x-cloak
-      x-show="tab === 'horaires'"
-      class=""
-    >
-      Horaires et planning
-    </div>
+    <div x-show="tab === 'horaires'" class="mx-auto space-y-12 max-w-7xl">
+      <div class="pt-16 pb-4 border-b border-stone-200">
+        <h2 class="text-3xl font-bold text-green-600">Horaires des activités</h2>
+      </div>
 
-      <!-- This is inscription page -->
+      <!-- First Section: Arts Martiaux -->
+      <div>
+        <div class="flex items-center justify-between pt-10 space-x-4">
+          <div class="flex items-center justify-between space-x-8">
+            <div>
+              <img src="https://v-images.cdnsw.com/Icones/e3uq8/004_fight.png?s=YqFHmw==&webp_compatible=1" alt="Icon">
+            </div>
+            <div>
+              <span class="text-xl text-stone-700">Planning des arts martiaux : cliquez sur l'icone PDF pour télécharger</span>
+            </div>
+          </div>
+          <div>
+            <a href="assets/planning_adultes.pdf" download="assets/planning_adultes.pdf">
+              <img class="w-24 h-24" src="https://ssl.sitew.org/images/blog/editor/UI_Download_flat_icons/pdf.svg" alt="Download PDF">
+            </a>
+          </div>
+        </div>
+        <div class="pt-6">
+          <!-- Modal Trigger (Image) -->
+          <img @click="openModal('assets/planning_adultes.png')" src="assets/planning_adultes.png" alt="Planning des adultes" class="w-2/3 cursor-pointer h-96">
+        </div>
+      </div>
+
+      <!-- Second Section: Enfants et Juniors -->
+      <div>
+        <div class="flex items-center justify-between pt-10 space-x-4">
+          <div class="flex items-center justify-between space-x-8">
+            <div>
+              <img class="w-12" src="https://v-images.cdnsw.com/Icones/e3x09/kids_couple.png?s=YqFEknI=" alt="Icon">
+            </div>
+            <div>
+              <span class="text-xl text-stone-700">Planning activités Enfants et Juniors</span>
+            </div>
+          </div>
+          <div>
+            <a href="assets/planning_enfants.pdf" download="assets/planning_enfants.pdf">
+              <img class="w-24 h-24" src="https://ssl.sitew.org/images/blog/editor/UI_Download_flat_icons/pdf.svg" alt="Download PDF">
+            </a>
+          </div>
+        </div>
+        <div class="pt-6">
+          <!-- Modal Trigger (Image) -->
+          <img @click="openModal('assets/planning_enfants.webp')" src="assets/planning_enfants.webp" alt="Planning des enfants" class="w-2/3 cursor-pointer h-96">
+        </div>
+      </div>
+
+      <!-- This Section: Crossfit -->
+      <div>
+        <div class="flex items-center justify-between pt-10 space-x-4">
+          <div class="flex items-center justify-between space-x-8">
+            <div>
+              <img class="w-12" src="https://v-images.cdnsw.com/Icones/e3x09/kids_couple.png?s=YqFEknI=" alt="Icon">
+            </div>
+            <div>
+              <span class="text-xl text-stone-700">Planning Cross-Training et Préparation Physique</span>
+            </div>
+          </div>
+        </div>
+        <div class="pt-6">
+          <!-- Modal Trigger (Image) -->
+          <img @click="openModal('assets/planning_crossfit.png')" src="assets/planning_crossfit.png" alt="Planning du Crossfit" class="w-2/3 cursor-pointer h-96">
+        </div>
+      </div>
+
+      <!-- Single Modal Structure -->
+      <div x-show="isModalOpen" x-transition.opacity class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75" x-cloak>
+        <div class="relative">
+          <img :src="modalImage" @click.away="closeModal" alt="Enlarged Image" class="max-w-full max-h-full">
+          <button @click="closeModal" class="absolute text-3xl font-bold text-white top-2 right-2">&times;</button>
+        </div>
+      </div>
+    </div>
     <div
       x-cloak
       x-show="tab === 'tarif'"
@@ -381,10 +483,10 @@ Au F-Club, nous proposons d’acquérir les bases indispensables de la boxe pied
   </div>
 
   <footer class="pt-20 ">
-    <div class="py-12  bg-stone-200">
-      <div class="xl:flex xl:space-x-20 xl:max-w-4xl xl:mx-auto">
+    <div class="py-12 bg-stone-200">
+      <div class="xl:flex xl:space-x-20 xl:max-w-7xl xl:mx-auto">
 
-        <div class="mx-auto w-80  xl:w-auto space-y-4">
+        <div class="mx-auto space-y-4 w-80 xl:w-auto">
           <img class="w-[66px] h-[34px] xl:w-[124px] xl:h-[70px]" src="https://v-images.cdnsw.com/Root/durlh/logoflcub2.png?s=YqFAknhl" alt="">
           <div class="text-stone-800 ">
             <div class=>
@@ -392,7 +494,7 @@ Au F-Club, nous proposons d’acquérir les bases indispensables de la boxe pied
                 Permanence accueil
               </span>
             </div>
-            <div class="flex justify-between space-x-12 pt-4  items-center text-medium text-xl">
+            <div class="flex items-center justify-between pt-4 space-x-12 text-xl text-medium">
               <span>
                 Lundi
               </span>
@@ -400,7 +502,7 @@ Au F-Club, nous proposons d’acquérir les bases indispensables de la boxe pied
                 17h -
               </span>
             </div>
-            <div  class="flex justify-between space-x-12  items-center text-medium text-xl">
+            <div  class="flex items-center justify-between space-x-12 text-xl text-medium">
               <span>
                 Mardi
               </span>
@@ -408,7 +510,7 @@ Au F-Club, nous proposons d’acquérir les bases indispensables de la boxe pied
                 FERME
               </span>
             </div>
-            <div  class="flex justify-between space-x-12  items-center text-medium text-xl">
+            <div  class="flex items-center justify-between space-x-12 text-xl text-medium">
               <span>
                 Mercredi
               </span>
@@ -416,7 +518,7 @@ Au F-Club, nous proposons d’acquérir les bases indispensables de la boxe pied
                 13h30 - 20h
               </span>
             </div>
-            <div  class="flex justify-between space-x-12  items-center text-medium text-xl">
+            <div  class="flex items-center justify-between space-x-12 text-xl text-medium">
               <span>
                 Jeudi
               </span>
@@ -424,7 +526,7 @@ Au F-Club, nous proposons d’acquérir les bases indispensables de la boxe pied
                 FERME
               </span>
             </div>
-            <div  class="flex justify-between space-x-12  items-center text-medium text-xl">
+            <div  class="flex items-center justify-between space-x-12 text-xl text-medium">
               <span>
                 Vendredi
               </span>
@@ -432,7 +534,7 @@ Au F-Club, nous proposons d’acquérir les bases indispensables de la boxe pied
                 17h - 19h
               </span>
             </div>
-            <div  class="flex justify-between space-x-12  items-center text-medium text-xl">
+            <div  class="flex items-center justify-between space-x-12 text-xl text-medium">
               <span>
                 Samedi/Dimanche
               </span>
@@ -442,7 +544,7 @@ Au F-Club, nous proposons d’acquérir les bases indispensables de la boxe pied
             </div>
           </div>
         </div>
-        <div class="pt-12 w-80 xl:max-w-4xl xl:w-auto mx-auto space-y-2">
+        <div class="pt-12 mx-auto space-y-2 w-80 xl:max-w-7xl xl:w-auto">
           <div class="flex items-center space-x-4">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
@@ -460,7 +562,7 @@ Au F-Club, nous proposons d’acquérir les bases indispensables de la boxe pied
             </span>
           </div>
         </div>
-        <div class="pt-12 w-80 xl:max-w-4xl xl:w-auto  mx-auto">
+        <div class="pt-12 mx-auto w-80 xl:max-w-7xl xl:w-auto">
           <div>
             <span class="text-xl">
               <strong>Adresse:</strong> <br>
@@ -468,11 +570,11 @@ Au F-Club, nous proposons d’acquérir les bases indispensables de la boxe pied
               42000 Saint Etienne
             </span>
           </div>
-          <div class="pt-8 flex items-center space-x-4">
-            <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyD4BLKPQpWXTsw5FtLjfpU1xRpQQAOmNwk&&zoom=14&maptype=roadmap&q=27B%20rue%20de%20Terrenoire%2042000%20Saint%20Etienne" frameborder="0"></iframe>
+          <div class="flex items-center pt-8 space-x-4">
+            <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDWm4c9-I9M5Rx-a4rdZ36eWBoIbZMJqrw&zoom=14&maptype=roadmap&q=27B%20rue%20de%20Terrenoire%2042000%20Saint%20Etienne" frameborder="0"></iframe>
           </div>
         </div>
-        <div class="pt-12 w-80 xl:max-w-4xl xl:w-auto mx-auto">
+        <div class="pt-12 mx-auto w-80 xl:max-w-7xl xl:w-auto">
           <div class="flex items-center space-x-4">
             <a href="https://www.facebook.com/fclubste">
               <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="40" height="40" viewBox="0 0 50 50">
