@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="style.css" type="text/css" async>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+    <style>
+      #map { height: 200px; z-index: 10 !important;}
+    </style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
     <!-- Alpine Plugins -->
     <script defer src="https://unpkg.com/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
@@ -43,10 +47,12 @@
       openModal(imageSrc) {
         this.modalImage = imageSrc;
         this.isModalOpen = true;
+        document.body.style.overflow = 'hidden'; // Disable scrolling
       },
       closeModal() {
         this.isModalOpen = false;
         this.modalImage = '';
+        document.body.style.overflow = ''; // Re-enable scrolling
       },
     };
   }
@@ -375,22 +381,92 @@ Au F-Club, nous proposons d’acquérir les bases indispensables de la boxe pied
       </div>
       <div class="pt-8 space-y-4">
         <div>
-          <a href="" target="_blank" class="text-lg text-blue-700 underline">Inscription sports de combat adulte</a>
+          <a href="https://www.helloasso.com/associations/fclub/adhesions/adhesions-sports-de-combat-adulte" target="_blank" class="text-lg text-blue-700 underline">Inscription sports de combat adulte</a>
         </div>
         <div>
-          <a href="" target="_blank" class="text-lg text-blue-700 underline">Inscription sports de combat féminin</a>
+          <a href="https://www.helloasso.com/associations/fclub/adhesions/section-feminine" target="_blank" class="text-lg text-blue-700 underline">Inscription sports de combat féminin</a>
         </div>
         <div>
-          <a href="" target="_blank" class="text-lg text-blue-700 underline">Inscription sports de combat enfants</a>
+          <a href="https://www.helloasso.com/associations/fclub/adhesions/adhesion-sports-de-combat-enfants" target="_blank" class="text-lg text-blue-700 underline">Inscription sports de combat enfants</a>
         </div>
         <div>
-          <a href="" target="_blank" class="text-lg text-blue-700 underline">Inscription sports de combat ados</a>
+          <a href="https://www.helloasso.com/associations/fclub/adhesions/adhesion-sports-de-combat-ados" target="_blank" class="text-lg text-blue-700 underline">Inscription sports de combat ados</a>
         </div>
         <div>
-          <a href="" target="_blank" class="text-lg text-blue-700 underline">Inscription sports de combat adulte</a>
+          <a href="https://www.helloasso.com/associations/fclub/adhesions/prepa-physique-3-mois-1" target="_blank" class="text-lg text-blue-700 underline">Inscription prépa physique 3 mois</a>
         </div>
         <div>
-          <a href="" target="_blank" class="text-lg text-blue-700 underline">Inscription sports de combat adulte</a>
+          <a href="https://www.helloasso.com/associations/fclub/adhesions/prepa-physique-6-mois" target="_blank" class="text-lg text-blue-700 underline">Inscription  prépa physique 6 mois</a>
+        </div>
+        <div>
+          <a href="https://www.helloasso.com/associations/fclub/adhesions/prepa-physique-et-cross-training-1-an-machine" target="_blank" class="text-lg text-blue-700 underline">Inscription  prépa physique et cross training 1 ans</a>
+        </div>
+        <div>
+          <a href="https://www.helloasso.com/associations/fclub/adhesions/cross-training-6-mois" target="_blank" class="text-lg text-blue-700 underline">Inscription  cross training 6 mois</a>
+        </div>
+        <div>
+          <a href="https://www.helloasso.com/associations/fclub/adhesions/adhesion-sports-de-combat-enfants" target="_blank" class="text-lg text-blue-700 underline">Inscription  cross training 3 mois</a>
+        </div>
+      </div>
+      <div class="pt-16 pb-4 border-b border-stone-200">
+        <h2 class="text-3xl font-bold text-green-600">ou <br><br> 1/ Télécharger et remplir la fiche d'inscription</h2>
+      </div>
+      <div class="pt-8 space-y-4">
+        <div>
+          <a href="https://fclub-ste.fr/dl/Root/fi5o2-Fiche_dinscription_Adulte_20232024.pdf" target="_blank" class="text-lg text-blue-700 underline">Fiche d'inscription Sports de combat</a>
+        </div>
+        <div>
+          <a href="https://fclub-ste.fr/fs/Root/fi5o6-Fiche_dinscriptions_Feminin_20232024.pdf" target="_blank" class="text-lg text-blue-700 underline">Fiche d'inscription Sports de combat féminin</a>
+        </div>
+        <div>
+          <a href="https://fclub-ste.fr/fs/Root/f924g-Fiche-d_inscription-Pilates.pdf" target="_blank" class="text-lg text-blue-700 underline">Fiche d'inscription Pilates</a>
+        </div>
+        <div>
+          <a href="https://fclub-ste.fr/dl/Root/fi5o4-Fiche_dinscription_Enfants20232024.pdf" target="_blank" class="text-lg text-blue-700 underline">Fiche d'inscription Enfants</a>
+        </div>
+      </div>
+      <div class="pt-16 pb-4 border-b border-stone-200">
+        <h2 class="text-3xl font-bold text-green-600">2/ Préparer le règlement</h2>
+      </div>
+      <div class="flex items-center pt-6 space-x-8">
+        <div>
+          <span>
+            Règlement possible en une fois par : <br>
+            - Carte bancaire <br>
+            - Liquide <br>
+            - Chèque <br>
+            - Chèque vacances ou coupon sport <br>
+            <br>
+            Règlement possible en 3 fois sans frais par : <br>
+            - Chèque
+          </span>
+        </div>
+        <div>
+          <a
+            href="#"
+            class="flex items-center justify-center px-1 py-1 text-sm font-medium text-white transition duration-300 ease-out bg-green-600 rounded cursor-pointer hover:bg-green-700 xl:text-xl md:px-2 xl:px-4"
+            @click.prevent="tab = 'tarif'; window.location.hash = 'tarif'"
+          >
+            Voir les tarifs des activités
+          </a>
+        </div>
+      </div>
+      <div class="pt-16 pb-4 border-b border-stone-200">
+        <h2 class="text-3xl font-bold text-green-600">3/ Déposer votre fiche d'inscription et le règlement à l'accueil du club</h2>
+      </div>
+      <div class="pt-16 pb-4 border-b border-stone-200">
+        <h2 class="text-3xl font-bold text-green-600">4/ Préparer votre certificat médical</h2>
+      </div>
+      <div class="pt-6">
+        <div>
+          <span>
+            Vous avez jusqu'à un mois à compter de la date d'inscription pour fournir un certificat médical
+          </span>
+        </div>
+        <div class="pt-4">
+          <a href="https://fclub-ste.fr/fs/Root/fwupu-Certificat-Medical-competitions-2022-2023-1-.pdf" target="_blank" class="text-lg text-blue-700 underline">
+            certificat medical ffkmda
+          </a>
         </div>
       </div>
     </div>
@@ -476,9 +552,23 @@ Au F-Club, nous proposons d’acquérir les bases indispensables de la boxe pied
     <div
       x-cloak
       x-show="tab === 'tarif'"
-      class=""
+      class="mx-auto space-y-12 max-w-7xl"
     >
-      Tarif
+      <div class="pt-16 pb-4 border-b border-stone-200">
+        <h2 class="text-3xl font-bold text-green-600">
+          Tarifs
+        </h2>
+      </div>
+      <div class="pt-6">
+        <!-- Modal Trigger (Image) -->
+        <img @click="openModal('assets/tarifs.webp')" src="assets/tarifs.webp" alt="tarifs" class="w-full cursor-pointer">
+      </div>
+      <div x-show="isModalOpen" x-transition.opacity class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75" x-cloak>
+        <div class="relative">
+          <img :src="modalImage" @click.away="closeModal" alt="Enlarged Image" class="max-w-full max-h-full">
+          <button @click="closeModal" class="absolute text-3xl font-bold text-white top-2 right-2">&times;</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -570,8 +660,19 @@ Au F-Club, nous proposons d’acquérir les bases indispensables de la boxe pied
               42000 Saint Etienne
             </span>
           </div>
-          <div class="flex items-center pt-8 space-x-4">
-            <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDWm4c9-I9M5Rx-a4rdZ36eWBoIbZMJqrw&zoom=14&maptype=roadmap&q=27B%20rue%20de%20Terrenoire%2042000%20Saint%20Etienne" frameborder="0"></iframe>
+          <div>
+            <div id="map"></div>
+            <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+            <script>
+              var map = L.map('map').setView([45.439790, 4.430480], 13);
+
+              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              }).addTo(map);
+
+              L.marker([45.439790, 4.430480]).addTo(map)
+                .openPopup();
+            </script>
           </div>
         </div>
         <div class="pt-12 mx-auto w-80 xl:max-w-7xl xl:w-auto">
